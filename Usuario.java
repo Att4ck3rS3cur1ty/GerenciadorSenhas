@@ -59,6 +59,12 @@ public class Usuario{
 
     protected  boolean alterarSenha(String atual, String nova){
         if(!verificarSenha(atual)) return false;
+
+        // verificar a nova senha contra as políticas
+        if(!ConfiguracaoSeguranca.getInstancia().validarSenha(nova)) {
+            throw new IllegalArgumentException(("Nova senha não atende às políticas de segurança"));
+        }
+
         this.senhaHash = Criptografia.gerarHash(nova);
         return true;
     }
