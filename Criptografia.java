@@ -73,8 +73,30 @@ public class Criptografia {
         SecureRandom rand = new SecureRandom();
         StringBuilder sb = new StringBuilder(tamanho);
 
+        // utilizando append para garantir pelo menos um char de cada uma das strings definidas acima
+        sb.append(maiusculas.charAt(rand.nextInt(maiusculas.length())));
+        sb.append(minusculas.charAt(rand.nextInt(maiusculas.length())));
+        sb.append(numeros.charAt(rand.nextInt(maiusculas.length())));
+        sb.append(especiais.charAt(rand.nextInt(maiusculas.length())));
 
+        // soma todas as strings, pega aleatoriamente e completa a senha 
+        String todos = maiusculas + minusculas + numeros + especiais;
 
-        return;
+        for (int i = 4; i < tamanho; i++){
+            sb.append(todos.charAt(rand.nextInt(todos.length())));
+        }
+
+        // Embaralhamento de chars
+        char[] array = sb.toString().toCharArray();
+        
+        for (int i = 0; i < array.length; i++) {
+            int randomIndex = rand.nextInt(array.length);
+            // adaptação do bubble sort
+            char temp = array[i];
+            array[i] = array[randomIndex];
+            array[randomIndex] = temp;
+        }
+
+        return new String(array);
     }
 }
