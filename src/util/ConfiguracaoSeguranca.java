@@ -1,3 +1,4 @@
+package util;
 public class ConfiguracaoSeguranca {
     // Definição das políticas de senha
     private int tamanhoMinimoSenha = 12;
@@ -25,7 +26,8 @@ public class ConfiguracaoSeguranca {
     // validar se a senha está atendendo aos requisitos
     public boolean validarSenha(String senha){
         if(senha == null || senha.length() < tamanhoMinimoSenha){
-            throw new IllegalArgumentException("Senha deve ter no mínimo " + tamanhoMinimoSenha + " caracteres");
+            throw new IllegalArgumentException(
+                String.format("Senha deve ter no mínimo %d caracteres. Caracteres informados: %d", tamanhoMinimoSenha, senha != null ? senha.length() : 0));
         }
 
         if(exigirMaiusculas && !senha.matches(".*[A-Z].*")){

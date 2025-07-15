@@ -1,3 +1,8 @@
+package model;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 public class Credencial {
 
     // Atributos encapsulados
@@ -6,6 +11,7 @@ public class Credencial {
     private Usuario usuario;
     private String senha;
     private String url;
+    private Set<Categoria> categorias = new HashSet<>();
 
     // Construtor
 
@@ -15,7 +21,21 @@ public class Credencial {
         this.senha = senha;
     }
 
+    // método p/ adicionar categoria
+    public void adicionarCategoria(Categoria categoria){
+        categorias.add(categoria);
+        categoria.adicionarCredencial(this);
+    }
+
     // Getters e Setters
+
+    public Set<Categoria> getCategorias(){
+        return Collections.unmodifiableSet(categorias);
+    }
+
+    public String getNomesCategorias(){
+        return categorias.stream().map(Categoria::getNome).collect(Collectors.joining(", "));
+    }
 
     public String getServico(){
         return this.servico;

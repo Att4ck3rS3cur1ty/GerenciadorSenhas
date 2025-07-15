@@ -1,6 +1,10 @@
+package model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import service.Criptografia;
+import util.Auditoria;
+import util.ConfiguracaoSeguranca;
 
 public class Usuario{
     private String nome;
@@ -57,16 +61,21 @@ public class Usuario{
      //? nao esta no diagrama
     */
 
-    protected  boolean alterarSenha(String atual, String nova){
-        if(!verificarSenha(atual)) return false;
-
-        // verificar a nova senha contra as políticas
-        if(!ConfiguracaoSeguranca.getInstancia().validarSenha(nova)) {
-            throw new IllegalArgumentException(("Nova senha não atende às políticas de segurança"));
+    public boolean alterarSenha(String atual, String nova){
+        if(!verificarSenha(atual)) {
+            Auditoria.registrar(this.login, "Tentativa falha de alteração de senha");
+            return false;
         }
 
-        this.senhaHash = Criptografia.gerarHash(nova);
-        return true;
+        try {
+            ConfiguracaoSeguranca.getInstancia().validarSenha(nova);
+            this.senhaHash = Criptografia.gerarHash(nova);
+            Auditoria.registrar(this.login, "Senha alterada com sucesso");
+            return true;
+        } catch (IllegalArgumentException e) {
+            Auditoria.registrar(this.login, "Erro ao alterar senha: " + e.getMessage());
+            throw e;
+        }
     }
 
     protected boolean verificarSenha(String senha){
