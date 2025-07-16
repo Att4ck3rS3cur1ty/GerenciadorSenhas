@@ -1,15 +1,3 @@
-# Gerenciador de Senhas
-Gerenciador de senhas básico escrito em Java
-
-## Como compilar?
-
-- `javac -d bin -sourcepath src src/Main.java src/model/*.java src/service/*.java src/util/*.java`
-
-- `java -cp src Main`
-
-## Diagrama de Classes
-
-```mermaid
 classDiagram
 direction TB
     class Usuario {
@@ -107,4 +95,5 @@ direction TB
     Credencial ..> "1:1" Auditoria : Registra
     Categoria ..> "1:1" Auditoria : Registra
     ConfiguracaoSeguranca --* GerenciadorUsuario : Singleton (garante apenas uma instância. Acesso global a essa instância)
-```
+
+
