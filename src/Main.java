@@ -188,15 +188,17 @@ public class Main {
         System.out.println("\n=== GERENCIAR CATEGORIAS ===");
         System.out.println("1. Criar categoria");
         System.out.println("2. Vincular credencial");
-        System.out.println("3. Listar categorias");
-        System.out.println("4. Voltar");
+        System.out.println("3. Desvincular credencial"); 
+        System.out.println("4. Listar categorias");
+        System.out.println("5. Remover categoria");
+        System.out.println("6. Voltar");
         System.out.print("Escolha: ");
 
         try {
             opcao = scanner.nextInt();
             scanner.nextLine(); // Limpar buffer
         } catch (InputMismatchException e) {
-            System.out.println("Erro: Digite apenas números de 1 a 4!");
+            System.out.println("Erro: Digite apenas números de 1 a 6.");
             scanner.nextLine(); // Limpar input inválido
             opcao = 0; // Forçar nova iteração
             continue;
@@ -252,7 +254,40 @@ public class Main {
                 }
                 break;
 
-            case 3:
+            case 3: 
+            System.out.print("Login do usuário: ");
+            Usuario user = GerenciadorUsuario.buscarUsuario(scanner.nextLine());
+
+            if (user != null && !user.getCredenciais().isEmpty()) {
+                System.out.println("Credenciais vinculadas:");
+                user.getCredenciais().forEach(c -> 
+                    System.out.println("- " + c.getServico() + 
+                        " (" + c.getNomesCategorias() + ")"));
+            
+                System.out.print("Serviço da credencial: ");
+                String svc = scanner.nextLine();
+
+                Credencial crd = user.getCredenciais().stream() 
+                    .filter(c -> c.getServico().equalsIgnoreCase(svc))
+                    .findFirst()
+                    .orElse(null);
+            
+                if (crd != null && !crd.getCategorias().isEmpty()) {
+                    System.out.print("Categoria para desvincular: ");
+                    String nomeCategoria = scanner.nextLine(); // Nova variável
+                    Categoria ctg = Categoria.buscarPorNome(nomeCategoria);
+                
+                    if (ctg != null && crd.removerCategoria(ctg)) { // Corrigido aqui
+                        ctg.removerCredencial(crd);
+                        System.out.println("Desvinculação realizada!");
+                    } else {
+                        System.out.println("Falha na desvinculação!");
+                    }
+                }
+            }
+            break;
+
+            case 4:
                 System.out.println("\n=== CATEGORIAS ===");
                 if (Categoria.listarTodas().isEmpty()) {
                     System.out.println("Nenhuma categoria cadastrada ainda.");
@@ -263,19 +298,32 @@ public class Main {
                 }
                 break;
 
-            case 4:
+            case 5:
+                System.out.print("Nome da categoria a remover: ");
+                String nomeRemover = scanner.nextLine();
+                
+                if (Categoria.removerCategoria(nomeRemover)) {
+                    System.out.println("Categoria removida com sucesso!");
+                } 
+                
+                else {
+                    System.out.println("Categoria não encontrada!");
+                }
+                break;
+
+            case 6:
                 System.out.println("Voltando ao menu principal...");
                 break;
 
             default:
-                System.out.println("Opção inválida! Digite de 1 a 4.");
+                System.out.println("Opção inválida! Digite de 1 a 5.");
         }
         
-        if (opcao != 4) {
+        if (opcao != 6) {
             System.out.println("\nPressione Enter para continuar...");
             scanner.nextLine();
         }
         
-    } while (opcao != 4);
+    } while (opcao != 6);
 }
 }

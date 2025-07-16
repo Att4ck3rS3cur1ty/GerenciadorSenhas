@@ -19,12 +19,24 @@ public class Credencial {
         this.servico = servico;
         this.usuario = usuario;
         this.senha = senha;
+        this.categorias = new HashSet<>();
     }
 
     // método p/ adicionar categoria
     public void adicionarCategoria(Categoria categoria){
         categorias.add(categoria);
         categoria.adicionarCredencial(this);
+    }
+
+    public boolean removerCategoria(Categoria categoria) {
+        if (categoria != null && this.categorias != null) {
+            boolean removido = this.categorias.remove(categoria);
+            if(removido){
+                categoria.removerCredencial(this);
+            }
+            return removido;
+        }
+        return false;
     }
 
     // Getters e Setters

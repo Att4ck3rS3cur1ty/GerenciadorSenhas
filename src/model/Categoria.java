@@ -26,6 +26,19 @@ public class Categoria {
         credenciais.remove(credencial);
     }
 
+    // remover categoria
+
+    public static boolean removerCategoria(String nome) {
+    Categoria categoria = buscarPorNome(nome);
+    if (categoria != null) {
+        // cópia de prevenção para não gerar ConcurrentModificationException
+        new ArrayList<>(categoria.credenciais).forEach(cred -> 
+            cred.getCategorias().remove(categoria));
+        return todasCategorias.remove(categoria);
+    }
+    return false;
+}
+
     public static List<Categoria> listarTodas(){
         return new ArrayList<>(todasCategorias);
     }
